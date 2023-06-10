@@ -1,13 +1,15 @@
-import { NavigationContainer } from "@react-navigation/native";
+import React from "react";
+import { ThemeProvider } from './src/utils/ThemeContext';
 import Navigation from "./src/navigations/Navigation.js";
-import { ThemeProvider } from "./src/utils/ThemeContext.js";
+import { StatusBar, View } from "react-native";
 
 export default function App() {
   return (
     <ThemeProvider>
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
+      <View style={{flex:1}}>
+        <StatusBar hidden/>
+        <Navigation/>
+      </View>
     </ThemeProvider>
   );
 }

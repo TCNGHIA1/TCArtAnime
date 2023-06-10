@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
@@ -8,22 +8,24 @@ import FavoriteSreen from "../screens/FavoriteSreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import COLORS from "../utils/colors";
+import Contains from "../utils/Contains";
+import { ThemeContext } from "../utils/ThemeContext";
+import { useTheme } from "@react-navigation/native";
+import { Entypo } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
 const MainBottom = () => {
+  const context = useContext(ThemeContext);
+  const theme = useTheme();
+
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: "#e91e63",
-        headerShown:false,
-        
-      }}
-    >
+    <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
+          headerShown: false,
           tabBarLabel: "Trang chủ",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
@@ -34,6 +36,7 @@ const MainBottom = () => {
         name="Search"
         component={SearchScreen}
         options={{
+          headerShown: false,
           tabBarLabel: "Tìm kiếm",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" color={color} size={size} />
@@ -44,9 +47,14 @@ const MainBottom = () => {
         name="Port"
         component={PortScreen}
         options={{
-          tabBarShowLabel:false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add" color={color} size={size} />
+          tabBarLabel: "",
+          headerShown: false,
+          tabBarButton: ({ accessibilityState, children, onPress }) => (
+            <TouchableOpacity style={Contains.default} onPress={onPress}>
+              <View style={styles.buttonTab}>
+                <Ionicons name="add" color={COLORS.pink} size={32} />
+              </View>
+            </TouchableOpacity>
           ),
         }}
       />
@@ -54,6 +62,7 @@ const MainBottom = () => {
         name="Favorite"
         component={FavoriteSreen}
         options={{
+          headerShown: false,
           tabBarLabel: "Yêu thích",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart" color={color} size={size} />
@@ -64,6 +73,22 @@ const MainBottom = () => {
         name="Settings"
         component={SettingsScreen}
         options={{
+          headerTitle: () => (
+            <View style={[Contains.row, Contains.between]}>
+              <Text
+                style={[Contains.headerTitle, { color: theme.colors.text }]}
+              >
+                Cài đặt
+              </Text>
+              <View style={[Contains.row,Contains.end]}>
+                <Entypo name="adjust" size={24} color={theme.dark?COLORS.white:COLORS.black} />
+                <Switch
+                  value={context.theme}
+                  onValueChange={context.toggleTheme}
+                />
+              </View>
+            </View>
+          ),
           tabBarLabel: "Cá nhân",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings" color={color} size={size} />
@@ -76,4 +101,18 @@ const MainBottom = () => {
 
 export default MainBottom;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttonTab: {
+    backgroundColor: COLORS.blue,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 42,
+    height: 42,
+
+    borderRadius: 21,
+    shadowColor: COLORS.pink,
+    shadowOffset: { width: 1, height: 5 },
+    shadowOpacity: 0.5,
+    elevation: 12,
+  },
+});

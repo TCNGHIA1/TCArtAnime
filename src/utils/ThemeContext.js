@@ -1,12 +1,20 @@
 import React, { createContext, useState } from "react";
+import { StatusBar, View } from "react-native";
+import Contains from "./Contains";
 
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("");
+  const [theme, setTheme] = useState(false);
+
+  const toggleTheme = () => {
+    setTheme(!theme);
+  };
 
   return (
-    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
 };
 
